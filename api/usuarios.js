@@ -41,6 +41,14 @@ const updateUser = (newUser, id) => {
     return user;
 }
 
+const deleteUser = (id) => {
+    const index = fetchUsers().findIndex(u => u.id == id);
+    fetchUsers().splice(index, 1);
+    return fetchUsers();
+}
+
+//  ROUTES
+
 router.get('/', (req, res) => {
     const usersList = fetchUsers();
     res.json(usersList)
@@ -53,18 +61,23 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
     const user = req.body;
-    user.nome ? user.nome : res.status(400).send("It's not possible to register an user with no name.");
-    user.senha ? user.senha : res.status(400).send("It's not possible to register an user with no password.");
+    user.nome ? user.nome : res.status(400).send("It's not possible to register/update an user with no name.");
+    user.senha ? user.senha : res.status(400).send("It's not possible to register/update an user with no password.");
 
     const newUser = createUser(user);
     res.json(newUser);
 })
 
 router.delete('/:id', (req, res) => {
-
+    const newList = deleteUser(req.params.id);
+    res.json(newList);
 })
 
 router.put('/:id', (req, res) => {
+    const user = req.body;
+    user.nome ? user.nome : res.status(400).send("It's not possible to register/update an user with no name.");
+    user.senha ? user.senha : res.status(400).send("It's not possible to register/update an user with no password.");
+
     const updatedUser = updateUser(req, req.params.id);
     res.json(updatedUser);
 })
