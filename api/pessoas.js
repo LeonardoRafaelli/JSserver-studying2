@@ -10,14 +10,14 @@ const router = express.Router();
 
 const listaPessoas = [
     {
-        id: 1,
         nome: "Leo",
-        cpf: "12345678"
+        cpf: "12345678",
+        id: 1,
     },
     {
-        id: 2,
         nome: "GustaXL",
-        cpf: "87654321"
+        cpf: "87654321",
+        id: 2,
     },
 ];
 
@@ -26,7 +26,7 @@ const buscarPessoas = () => {
 }
 
 const buscarPessoa = (id) => {
-    const pessoa = buscarPessoas().find(p => p.id = id);
+    const pessoa = buscarPessoas().find(p => p.id == id);
     return pessoa;
 }
 
@@ -64,11 +64,14 @@ router.delete('/:id', (req, res) => {
     res.json(listaNova);
 })
 
-router.put('/:id')
-
+router.put('/:id', (req, res) => {
+    const pessoa = buscarPessoa(req.params.id);
+    pessoa.nome = req.body.nome;
+    pessoa.cpf = req.body.cpf;
+    res.json(pessoa);
+})
 
 
 module.exports = {
-    router,
-    buscarPessoas
+    router
 }
