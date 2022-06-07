@@ -53,11 +53,15 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
     const user = req.body;
-    user.nome ? user.nome : res.status(400).send("It's not possible to register an user with no name.")
-    user.senha ? user.senha : res.status(400).send("It's not possible to register an user with no name.")
+    user.nome ? user.nome : res.status(400).send("It's not possible to register an user with no name.");
+    user.senha ? user.senha : res.status(400).send("It's not possible to register an user with no password.");
 
-    const newUser = createUser(req.body);
+    const newUser = createUser(user);
     res.json(newUser);
+})
+
+router.delete('/:id', (req, res) => {
+
 })
 
 router.put('/:id', (req, res) => {
