@@ -1,4 +1,6 @@
 const express = require('express');
+const res = require('express/lib/response');
+const boletos = require('./boletos');
 const router = express.Router();
 
 
@@ -37,8 +39,23 @@ const criarPessoa = (pessoa) => {
 }
 
 const deletarPessoa = (id) => {
-    const index = buscarPessoas().findIndex(p => p.id === id);
-    buscarPessoas().splice(index, 1);
+
+    const boleto = boletos.fetchBills().find(b => b.person_id == id);
+    console.log(boleto);
+
+    if(boleto){
+        console.log("Tem");
+    } else {
+        console.log("Não tem");
+    }
+
+    if(boleto){
+        const index = buscarPessoas().findIndex(p => p.id === id);
+        buscarPessoas().splice(index, 1);
+    } else {
+        res.status(400).send("Não é possível remover uma pessoa que tenha um boleto registrado.");
+    }
+    
     return buscarPessoas();
 }
 

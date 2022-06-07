@@ -29,7 +29,12 @@ router.get('/', (req, res) => {
     res.json(billList);
 })
 
+router.get('/pessoa/:id', (req, res) => {
+
+})
+
 
 module.exports = {
-    router
+    router,
+    fetchBills,
 }
