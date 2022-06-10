@@ -7,9 +7,9 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/api/usuarios', usuarios.router);
-app.use('/api/pessoas', pessoas.router); 
-app.use('/api/boletos', boletos.router);
+app.use('/api/users', usuarios.router);
+app.use('/api/people', pessoas.router); 
+app.use('/api/bills', boletos.router);
 
 
 

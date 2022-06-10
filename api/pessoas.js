@@ -1,6 +1,5 @@
 const express = require('express');
-const res = require('express/lib/response');
-const boletos = require('./boletos');
+const bills = require("./boletosF");
 const router = express.Router();
 
 
@@ -10,85 +9,80 @@ const router = express.Router();
 // 400 - status de erro;
 // 500 - erros de servidor.
 
-const listaPessoas = [
+const peopleList = [
     {
-        nome: "Leo",
+        name: "Leo",
         cpf: "12345678",
         id: 1,
     },
     {
-        nome: "GustaXL",
+        name: "GustaXL",
         cpf: "87654321",
         id: 2,
     },
 ];
 
-const buscarPessoas = () => {
-    return listaPessoas;
+const getPeople = () => {
+    return peopleList;
 }
 
-const buscarPessoa = (id) => {
-    const pessoa = buscarPessoas().find(p => p.id == id);
+const getPerson = (id) => {
+    const pessoa = getPeople().find(p => p.id == id);
     return pessoa;
 }
 
-const criarPessoa = (pessoa) => {
-    pessoa.id = buscarPessoas().length + 1;
-    buscarPessoas().push(pessoa);
+const createPerson = (pessoa) => {
+    pessoa.id = getPeople().length + 1;
+    getPeople().push(pessoa);
     return pessoa;
 }
 
-const deletarPessoa = (id) => {
 
-    const boleto = boletos.fetchBills().find(b => b.person_id == id);
-    console.log(boleto);
+const deletePerson = (id) => {
 
-    if(boleto){
-        console.log("Tem");
-    } else {
-        console.log("Não tem");
-    }
+    const index = getPeople().findIndex(p => p.id === id);
+    getPeople().splice(index, 1);
 
-    if(boleto){
-        const index = buscarPessoas().findIndex(p => p.id === id);
-        buscarPessoas().splice(index, 1);
-    } else {
-        res.status(400).send("Não é possível remover uma pessoa que tenha um boleto registrado.");
-    }
-    
-    return buscarPessoas();
+    return getPeople();
+}
+
+const checkBoleto = (id) => {
+    const boleto = bills.getBills().find(b => b.person_id == id);
+    return boleto ? false : true;
 }
 
 
 router.post('/', (req, res) => {
-    const pessoaAdicionada = criarPessoa(req.body);
-    res.json(pessoaAdicionada);
+    const pessoa = req.body;
+    pessoa.name && pessoa.cpf ? res.json(createPerson(pessoa)) : res.status(400).send("Pessoa não possui nome E/OU cpf");
 })
 
 
 router.get('/', (req, res) => {
-    res.send(buscarPessoas())
+    res.send(getPeople())
 });
 
 
 router.get('/:id', (req, res) => {
-    const pessoa = buscarPessoa(req.params.id);
-    res.json(pessoa);
+    const person = getPerson(req.params.id);
+    res.json(person);
 })
 
 router.delete('/:id', (req, res) => {
-    const listaNova = deletarPessoa(req.params.id);
-    res.json(listaNova);
+    const id = req.params.id
+    checkBoleto(id) ? res.json(deletePerson(id)) : res.status(400).send("The person you tried to delete is related with a bill"); 
+
 })
 
 router.put('/:id', (req, res) => {
-    const pessoa = buscarPessoa(req.params.id);
-    pessoa.nome = req.body.nome;
-    pessoa.cpf = req.body.cpf;
-    res.json(pessoa);
+    const person = getPerson(req.params.id);
+    person.name = req.body.name;
+    person.cpf = req.body.cpf;
+    res.json(person);
 })
 
 
 module.exports = {
-    router
+    router,
+    getPerson
 }
