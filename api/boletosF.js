@@ -5,7 +5,7 @@ const getBills = () => {
 }
 
 const getPersonBill = (id) => {
-    const bill = bills.getBills().find(b => b.person_id == id);
+    const bill = getBills().find(b => b.person_id == id);
     return bill;
 }
 

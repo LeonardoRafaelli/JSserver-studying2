@@ -51,6 +51,7 @@ const checkBoleto = (id) => {
     return boleto ? false : true;
 }
 
+// ROUTES
 
 router.post('/', (req, res) => {
     const pessoa = req.body;
@@ -71,7 +72,6 @@ router.get('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
     const id = req.params.id
     checkBoleto(id) ? res.json(deletePerson(id)) : res.status(400).send("The person you tried to delete is related with a bill"); 
-
 })
 
 router.put('/:id', (req, res) => {

@@ -35,7 +35,7 @@ const getBills = () => {
 }
 
 const getPersonBill = (id) => {
-    const bill = getBills().find(b => b.person_id == id);
+    const bill = getBills().filter(b => b.person_id == id);
     return bill;
 }
 
@@ -45,6 +45,14 @@ const createBill = (bill) => {
     getBills().push(bill);
     return bill
 }
+
+const updateBillStatus = (id, status) => {
+    const bill = getBills().find(b => b.id == id);
+    bill.status = status;
+    return bill;
+}
+
+// ROUTES
 
 router.post('/', (req, res) => {
     const bill = req.body;
@@ -68,6 +76,11 @@ router.get('/', (req, res) => {
 router.get('/person/:id', (req, res) => {
     const id = req.params.id;
     res.json(getPersonBill(id));
+})
+
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    res.json(updateBillStatus(id, req.body.status));
 })
 
 

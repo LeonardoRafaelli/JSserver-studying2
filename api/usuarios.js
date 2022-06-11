@@ -56,8 +56,8 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    const fetchedUser = getUser(req.params.id);
-    res.json(fetchedUser);
+    const getUser = getUser(req.params.id);
+    res.json(getUser);
 })
 
 router.post('/', (req, res) => {
