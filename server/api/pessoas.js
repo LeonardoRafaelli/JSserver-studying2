@@ -1,7 +1,8 @@
 const express = require('express');
-const bills = require("./boletosF");
 const router = express.Router();
 
+//Imports
+const {getPeople, getPerson} = require("./data/peopleList");
 
 // 100 - status de processamento;
 // 200 - status OK;
@@ -9,27 +10,6 @@ const router = express.Router();
 // 400 - status de erro;
 // 500 - erros de servidor.
 
-const peopleList = [
-    {
-        name: "Leo",
-        cpf: "12345678",
-        id: 1,
-    },
-    {
-        name: "GustaXL",
-        cpf: "87654321",
-        id: 2,
-    },
-];
-
-const getPeople = () => {
-    return peopleList;
-}
-
-const getPerson = (id) => {
-    const pessoa = getPeople().find(p => p.id == id);
-    return pessoa;
-}
 
 const createPerson = (pessoa) => {
     pessoa.id = getPeople().length + 1;
@@ -39,7 +19,6 @@ const createPerson = (pessoa) => {
 
 
 const deletePerson = (id) => {
-
     const index = getPeople().findIndex(p => p.id === id);
     getPeople().splice(index, 1);
 
@@ -47,8 +26,8 @@ const deletePerson = (id) => {
 }
 
 const checkBoleto = (id) => {
-    const boleto = bills.getBills().find(b => b.person_id == id);
-    return boleto ? false : true;
+    const boletoExists = bills.getBills().find(b => b.person_id == id);
+    return boletoExists ? false : true;
 }
 
 // ROUTES

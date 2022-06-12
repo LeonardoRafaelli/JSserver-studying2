@@ -1,19 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bills = require('./boletosF');
-
-const usersList = [
-    {
-        id: 1,
-        name: "Leonardo",
-        passwd: "12345678",
-    },
-    {
-        id: 2,
-        name: "Rafaelli",
-        passwd: "87654321",
-    },
-];
+const {getUsersList, getUser} = require('./data/usersList')
 
 // Respostas de informação (100-199),
 // Respostas de sucesso (200-299),
@@ -21,13 +8,6 @@ const usersList = [
 // Erros do cliente (400-499),
 // Erros do servidor (500-599).
 
-const getUsersList = () => {
-    return usersList;
-};
-
-const getUser = (id) => {
-    return getUsersList().find(u => u.id == id);
-}
 
 const createUser = (user) => {
     user.id = getUsersList().length + 1;
@@ -48,6 +28,11 @@ const deleteUser = (id) => {
     return getUsersList();
 }
 
+const checkBoleto = (id) => {
+    const boletoExists = bills.getBills().find(b => b.person_id == id);
+    return boletoExists ? false : true;
+}
+
 //  ROUTES
 
 router.get('/', (req, res) => {
@@ -66,8 +51,8 @@ router.post('/', (req, res) => {
 })
 
 router.delete('/:id', (req, res) => {
-    const newList = deleteUser(req.params.id);
-    res.json(newList);
+    const id = req.params.id
+    checkBoleto(id) ? res.json(deleteUser(id)) : res.status(400).send("The user you tried to delete is related with a bill"); 
 })
 
 router.put('/:id', (req, res) => {
@@ -80,5 +65,6 @@ router.put('/:id', (req, res) => {
 })
 
 module.exports = {
-    router
+    router,
+    getUser
 }
