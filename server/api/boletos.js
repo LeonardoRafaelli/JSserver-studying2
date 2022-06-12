@@ -34,7 +34,7 @@ const resolveBill = (id, res) => {
 
 
 const newBill = (bill, res) => {
-
+    
     if(!checkUser(bill.user_id)){
         res.status(400).send("User not found.")
     } else 
@@ -68,7 +68,7 @@ router.get('/', (req, res) => {
 
 router.get('/person/:id', (req, res) => {
     const id = req.params.id;
-    res.json(getPersonBill(id));
+    res.json(getBills().filter(b => b.person_id == id));
 })
 
 
