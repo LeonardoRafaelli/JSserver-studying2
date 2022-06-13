@@ -1,11 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const pessoas = require('./api/pessoas');
 const usuarios = require('./api/usuarios');
 const boletos = require('./api/boletos');
 
 const app = express();
-
 app.use(express.json());
+app.use(cors());
 
 app.use('/api/users', usuarios.router);
 app.use('/api/people', pessoas.router); 

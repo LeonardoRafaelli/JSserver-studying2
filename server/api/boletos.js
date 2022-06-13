@@ -34,7 +34,7 @@ const resolveBill = (id, res) => {
 
 
 const newBill = (bill, res) => {
-    
+
     if(!checkUser(bill.user_id)){
         res.status(400).send("User not found.")
     } else 
