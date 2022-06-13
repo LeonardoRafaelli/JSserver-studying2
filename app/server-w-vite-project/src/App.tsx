@@ -7,17 +7,13 @@ import { useState } from 'react'
 // Components
 import Button from './components/buttons';
 
-interface PeopleArray{
-  array: [{name?: String, cpf?: String}]
-}
-
 
 
 
 
 function App() {
 
-  const [peopleList, setPeopleList] = useState<[{id?: BigInteger, name?: String, cpf?: String}]>([{}]);
+  const [peopleList, setPeopleList] = useState<{id?: BigInteger, name?: String, cpf?: String}[]>([{}]);
   const [name, setName] = useState<string>("");
   const [cpf, setCpf] = useState<string>("");
 
@@ -65,7 +61,7 @@ function App() {
                   <p>CPF: {p.cpf}</p>
                   <hr />
                 </div>
-            })}
+            })} 
           </div>
 
         </div>
