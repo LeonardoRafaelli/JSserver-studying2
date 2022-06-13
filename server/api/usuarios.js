@@ -1,12 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const {getUsersList, getUser} = require('./data/usersList')
-
+// const {getUsersList, getUser} = require('./data/usersList')
+const helper = require('../utils/helper');
 // Respostas de informação (100-199),
 // Respostas de sucesso (200-299),
 // Redirecionamentos (300-399),
 // Erros do cliente (400-499),
 // Erros do servidor (500-599).
+
+const usersList = [
+    {
+        id: 1,
+        name: "Leonardo",
+        passwd: "12345678",
+    },
+    {
+        id: 2,
+        name: "Rafaelli",
+        passwd: "87654321",
+    },
+];
+
+const getUsersList = () => {
+    return usersList;
+};
+
+const getUser = (_id) => {
+    const id = helper.isInteger(_id) ? parseInt(_id) : _id;
+    return getUsersList().find(u => u.id === id);
+}
+
 
 
 const createUser = (user) => {
@@ -15,7 +38,8 @@ const createUser = (user) => {
     return user;
 }
 
-const updateUser = (newUser, id) => {
+const updateUser = (newUser, _id) => {
+    const id = helper.isInteger(_id) ? parseInt(_id) : _id;
     const user = getUser(id);
     user.name = newUser.body.name;
     user.passwd = newUser.body.passwd;
@@ -66,5 +90,6 @@ router.put('/:id', (req, res) => {
 
 module.exports = {
     router,
-    getUser
+    getUser,
+    getUsersList
 }

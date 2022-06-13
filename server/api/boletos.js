@@ -2,25 +2,53 @@ const express = require('express');
 const router = express.Router();
 
 // Imports
-const {getBills, getPersonBill} = require('./data/billsList');
-const {getPerson} = require('./data/peopleList');
-const {getUser} = require('./data/usersList');
+// const {getBills, getPersonBill} = require('./data/billsList');
+// const {getPerson} = require('./data/peopleList');
+const references = require('./references');
+// const {getUser} = require('./data/usersList');
 
+const billList = [
+    {
+        id: 1,
+        price: 500,
+        user_id: 1,
+        person_id: 1,
+        person_name: "Leo",
+        status: "Pending",
+    },
+    {
+        id: 2,
+        price: 1000,
+        user_id: 2,
+        person_id: 2,
+        person_name: "Gustavinho",
+        status: "OK",
+    }
+]
+
+const getBills = () => {
+    return billList;
+}
+
+const getPersonBill = (id) => {
+    const bill = getBills().filter(b => b.person_id == id);
+    return bill;
+}
 
 const checkUser= (id) => {
-    const user = getUser(id)
+    const user = references.users.getUser(id);
     return user;
 }
 
 const checkPerson = (id) => {
-    const person = getPerson(id);
+    const person = references.people.getPerson(id);
     return person;
 }
 
 const createBill = (bill) => {
     bill.id = getBills().length + 1;
 
-    bill.person_name = getPerson(bill.person_id).name;
+    bill.person_name = references.people.getPerson(bill.person_id).name;
     getBills().push(bill);
     
     return bill
