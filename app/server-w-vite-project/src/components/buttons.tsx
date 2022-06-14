@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from "react";
 
 interface typeProps {
     onClick: () => void,
-    children: String
+    children: string
 }
 ;
 

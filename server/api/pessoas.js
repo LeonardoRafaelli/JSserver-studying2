@@ -38,6 +38,7 @@ const getPerson = (_id) => {
 
 
 const createPerson = (pessoa) => {
+    if(typeof pessoa !== "object") return new Error("People must be an object!");
     pessoa.id = getPeople().length + 1;
     getPeople().push(pessoa);
     return pessoa;
@@ -91,5 +92,6 @@ router.put('/:id', (req, res) => {
 module.exports = {
     router,
     getPeople,
-    getPerson
+    getPerson,
+    createPerson
 }

@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
+import PeopleService from './services/PeopleService';
+
+import { people } from './interfaces/people.interface';
+
 import './App.css'
 
 import { useState } from 'react'
@@ -7,64 +11,85 @@ import { useState } from 'react'
 // Components
 import Button from './components/buttons';
 
-
-
-
-
 function App() {
 
-  const [peopleList, setPeopleList] = useState<{id?: BigInteger, name?: String, cpf?: String}[]>([{}]);
+  const [peopleList, setPeopleList] = useState<people[]>([]);
   const [name, setName] = useState<string>("");
   const [cpf, setCpf] = useState<string>("");
+  const [id, setId] = useState<number>(0);
 
-  const getPeople = async () => {
-    await fetch('http://localhost:3000/api/people')
-    .then(res => res.json())
-    .then(res => setPeopleList(res));
+  useEffect(() => {
+    getPeople();
+  }, [])
+
+  const getPeople = () => {
+    PeopleService.get().then(result => { setPeopleList(result) }).catch(console.error);
   }
 
-  const createPerson = ({name, cpf} : {name: String, cpf: String}) => {
-    fetch('http://localhost:3000/api/people',
-    {method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: name,
-      cpf: cpf
-    })
-  })
-    .then(res => res.json())
-    .then(res => console.log(res));
+  const updatePerson = () => {
+    const people = {
+      id, cpf, name
+    }
+    PeopleService.update(people).then(result => { clearInputs(); getPeople() }).catch(console.error);
+  }
+
+  const createPerson = () => {
+    const people = {
+      cpf, name
+    }
+    PeopleService.create(people).then(result => { clearInputs(); getPeople() }).catch(console.error);
+  }
+
+  const clearInputs = () => {
+    setName("");
+    setCpf("");
+    setId(0);
+  }
+
+  const initEdition = (person: people) => {
+    setId(person.id);
+    setName(person.name);
+    setCpf(person.cpf);
+  }
+
+  const save = () => {
+    if (id == 0) {
+      createPerson()
+    } else {
+      updatePerson();
+    }
   }
 
 
   return (
     <div className="App">
-        <div className='server-getter'>
-          <Button onClick={getPeople}>Get People</Button>
-          {name && cpf ? <button onClick={() => createPerson({name, cpf})}>Create Person</button> : null}
+      <div className='server-getter'>
+        {name && cpf ?
+          <button onClick={() => save()}>
+            {id === 0 ? "Create Person" : "Update Person"}
+          </button> : null}
 
-          <p>Create a new person here</p>
-          <p>Name</p>
-          <input type="text" value={name} onChange={(e) => {setName(e.target.value)}}/>
-          <p>CPF</p>	
-          <input type="text" value={cpf} onChange={(e) => {setCpf(e.target.value)}}/>
+        <p>Create a new person here</p>
+        <p>Name</p>
+        <input type="text" value={name} onChange={(e) => { setName(e.target.value) }} />
+        <p>CPF</p>
+        <input type="text" value={cpf} onChange={(e) => { setCpf(e.target.value) }} />
 
 
 
-          <div className='people-name'>
-            {peopleList.map(p => {
-              return <div>
-                  <p>ID: {p.id}</p>
-                  <p>NAME: {p.name}</p>
-                  <p>CPF: {p.cpf}</p>
-                  <hr />
-                </div>
-            })} 
-          </div>
-
+        <div className='people-name'>
+          {peopleList.map(person => {
+            return <div>
+              <p>ID: {person.id}</p>
+              <p>NAME: {person.name}</p>
+              <p>CPF: {person.cpf}</p>
+              <Button onClick={() => initEdition(person)}>Editar</Button>
+              <hr />
+            </div>
+          })}
         </div>
+
+      </div>
     </div>
   )
 }
