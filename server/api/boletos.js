@@ -2,10 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Imports
-// const {getBills, getPersonBill} = require('./data/billsList');
-// const {getPerson} = require('./data/peopleList');
 const references = require('./references');
-// const {getUser} = require('./data/usersList');
 
 const billList = [
     {

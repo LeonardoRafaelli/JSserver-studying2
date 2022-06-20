@@ -3,9 +3,6 @@ const router = express.Router();
 const helper = require('../utils/helper');
 const references = require('./references');
 
-//Imports
-// const {getPeople, getPerson} = require("./data/peopleList");
-
 // 100 - status de processamento;
 // 200 - status OK;
 // 300 - status de rota removida ou remanejada;
